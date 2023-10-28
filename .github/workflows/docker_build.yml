@@ -69,7 +69,7 @@ jobs:
           fi
 
           # get container status
-          STATUS=$(docker inspect --format '{{.State.Status}}' $CONTAINER_ID)
+          STATUS=$(docker inspect --format '{{.State.Status}}' echo $CONTAINER_ID)
 
           if [ "$STATUS" != "running" ]; then
               echo "Container $CONTAINER_ID is not running，trying to clean data and restart"
