@@ -57,7 +57,7 @@ jobs:
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST bash -c "'sleep 30' && docker ps | grep rooch | awk '{print \$1}' | xargs -r docker stop && docker ps -a | grep rooch | awk '{print \$1}' | xargs -r docker rm -f && docker pull 'ghcr.io/rooch-network/rooch:${{ steps.docker_meta.outputs.version }}' && docker run -d -v /root:/root -p 50051:50051 'ghcr.io/rooch-network/rooch:${{ steps.docker_meta.outputs.version }}' server start -n dev --eth-rpc-url https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
-          ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST bash -c $'
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST $'
           KEYWORD="rooch"
 
           # get the container id
@@ -73,10 +73,10 @@ jobs:
 
           if [ "$STATUS" != "running" ]; then
               echo "Container $CONTAINER_ID is not running, trying to clean data and restart"
-              echo "Start cleaning the data with image_tag: $(echo $IMAGE_TAG)"
-              docker run --rm -v "/root:/root" ghcr.io/rooch-network/rooch:$(echo $IMAGE_TAG) server clean -n dev
+              echo "Start cleaning the data with image_tag: $IMAGE_TAG"
+              docker run --rm -v "/root:/root" ghcr.io/rooch-network/rooch:$IMAGE_TAG server clean -n dev
               rm -rf ~/.rooch
-              docker run --rm -v "/root:/root" ghcr.io/rooch-network/rooch:$(echo $IMAGE_TAG) init -m "$(echo $DEV_MNEMONIC_PHRASE)" --skip-password
+              docker run --rm -v "/root:/root" ghcr.io/rooch-network/rooch:$IMAGE_TAG init -m $DEV_MNEMONIC_PHRASE --skip-password
               docker start $CONTAINER_ID
               if [ $? -eq 0 ]; then
                   echo "Container $CONTAINER_ID Successfully restarted."
