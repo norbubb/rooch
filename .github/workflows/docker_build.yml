@@ -10,8 +10,8 @@ on:
 jobs:
   build-rooch-docker:
     name: build rooch docker
-    # runs-on: self-hosted
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    # runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v1
